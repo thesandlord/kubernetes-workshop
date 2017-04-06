@@ -32,7 +32,7 @@ You can see the extrnal IP address for the service with this command:
 
 One pod is not enough. Let's get 10 of them!
 
-`kubectl scale deployment hello-world --replicas=10`
+`kubectl scale deployment hello-node --replicas=10`
 
 You can see the all pods with this command:
 
