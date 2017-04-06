@@ -35,7 +35,7 @@ Expose the container with a [service](./hello-node/service.yaml):
 
 At this stage, you have created a Deployment with one Pod, and a Service with an extrnal load balancer that will send traffic to that pod.
 
-You can see the extrnal IP address for the service with this command:
+You can see the extrnal IP address for the service with this command. It might take a few minutes to get the extrnal IP address:
 
 `kubectl get svc`
 
@@ -63,7 +63,7 @@ Build the Docker Container using [Google Container Builder](https://cloud.google
 
 This will automatically build and push this Docker image to [Google Container Registry](https://gcr.io).
 
-Now, we are going to update the deployment created in the first step. You can see the YAML file [here](/rolling-update/deployment.yaml).
+Now, we are going to update the deployment created in the first step. You can see the new YAML file [here](/rolling-update/deployment.yaml).
 
 Replace the <PROJECT_ID> placeholder with your Project ID. Use this command to do it automatically:
 
