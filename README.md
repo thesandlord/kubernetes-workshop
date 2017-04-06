@@ -53,14 +53,15 @@ Build the Docker Container:
 Now push this image to [Google Container Registry](https://gcr.io) so we can securly access it from the cluster.
 
 Tag:
-`docker tag -f imageflipper:1.0 -t gcr.io/$DEVSHELL_PROJECT_ID/imageflipper1:0`
+`docker tag imageflipper:1.0 gcr.io/$DEVSHELL_PROJECT_ID/imageflipper:1.0`
 
 Push:
-`gcloud docker -- push gcr.io/$DEVSHELL_PROJECT_ID/imageflipper1:0`
+`gcloud docker -- push gcr.io/$DEVSHELL_PROJECT_ID/imageflipper:1.0`
 
 Now, we are going to update the deployment created in the first step. You can see the YAML file [here](./rolling-update/deployment.yaml).
 
 Replace the `<PROJECT_ID>` placeholder with your Project ID. You can see your project ID by running `echo $DEVSHELL_PROJECT_ID`
+** come up with bash one lines **
 
 Now use the apply command to update the deployment.
 

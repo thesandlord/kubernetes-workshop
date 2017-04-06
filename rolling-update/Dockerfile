@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 FROM node:onbuild
-EXPOSE 3000
+EXPOSE 8080
 CMD ["npm", "start"]

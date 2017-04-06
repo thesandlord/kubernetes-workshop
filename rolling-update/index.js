@@ -17,6 +17,9 @@ var multer  =   require('multer');
 var app     =   express();
 var sharp   =   require("sharp");
 var fs      =   require('fs');
+
+var port = process.env.port || 8080
+
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
     callback(null, './');
@@ -48,6 +51,6 @@ app.post('/api/photo',function(req,res){
     });
 });
 
-app.listen(3000,function(){
-    console.log("Working on port 3000");
+app.listen(port, _ => {
+    console.log("Working on port ${port}");
 });

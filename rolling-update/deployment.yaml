@@ -14,7 +14,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  app: hello-node
+  name: hello-node
 spec:
   replicas: 10
   template:
@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: imageflip
-        image: gcr.io/<PROJECT_ID>/imageflip:1.0
+        image: gcr.io/<PROJECT_ID>/imageflipper:1.0
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 3000
+        - containerPort: 8080
