@@ -117,9 +117,15 @@ Instead of doing a rolling update like we did before, we are going to use a Blue
 
 This means we will spin up a new deployment of the frontend, wait until all containers are created, then configure the service to send traffic to the new deployment, and finally spin down the old deployment. This allows us to make sure that users don't get different versions of the app, smoke test the new deployment at scale, and a few other benefits. You can read more about [Blue-Green Deployments vs Rolling Updates here](http://stackoverflow.com/questions/23746038/canary-release-strategy-vs-blue-green).
 
+Build the Docker Container using [Google Container Builder](https://cloud.google.com/container-builder):
+
+`gcloud container builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/imageflipper:2.0 ./blue-green/`
+
 Spin up the the new deployment with the following command:
 
 `sed -i "s~<PROJECT_ID>~$DEVSHELL_PROJECT_ID~g" ./blue-green/deployment.yaml`
+
+`kubectl apply -f ./blue-green/deployment.yaml`
 
 You can see all the containers running with this command:
 
