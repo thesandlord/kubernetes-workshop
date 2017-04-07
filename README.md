@@ -93,3 +93,38 @@ You may notice we are using the [@google-cloud/vision]() npm module to call the 
 
 The service.yaml file for the backend service is very similar to the frontend service, but it does not specify `type: LoadBalancer`. This will prevent Kubernetes from spinning up a Cloud Load Balancer, and instead the service will only be accessable from inside the cluster.
 
+Run the backend [deployment](./second-service/deployment.yaml):
+
+`sed -i "s~<PROJECT_ID>~$DEVSHELL_PROJECT_ID~g" ./second-service/deployment.yaml`
+
+`kubectl apply -f ./second-service/deployment.yaml`
+
+Expose the container with a [service](./second-service/service.yaml):
+
+`kubectl apply -f ./second-service/service.yaml`
+
+## Step 5: Update Frontend Service to use the Backend with a Blue-Green deployment
+
+Now the backend service is running, you need to update the frontend to use the new backend.
+
+The new code is [here](./blue-green/index.js).
+
+Instead of doing a rolling update like we did before, we are going to use a Blue-Green strategy.
+
+This means we will spin up a new deployment of the frontend, wait until all containers are created, then configure the service to send traffic to the new deployment, and finally spin down the old deployment. This allows us to make sure that users don't get different versions of the app, smoke test the new deployment at scale, and a few other benefits. You can read more about [Blue-Green Deployments vs Rolling Updates here](http://stackoverflow.com/questions/23746038/canary-release-strategy-vs-blue-green).
+
+Spin up the the new deployment with the following command:
+
+`sed -i "s~<PROJECT_ID>~$DEVSHELL_PROJECT_ID~g" ./blue-green/deployment.yaml`
+
+You can see all the containers running with this command:
+
+`kubectl get pods`
+
+Now, we need to edit the service to point to this new deployment. The new service definition is [here](./blue-green/service.yaml). Notice the only thing we changed is the selector.
+
+`kubectl apply -f ./blue-green/service.yaml`
+
+At this point, you can visit the website and the new code will be live. Once you are happy with the results, you can turn down the green deployment.
+
+`kubectl scale deployment hello-node-green --replicas=0`
