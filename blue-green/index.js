@@ -15,7 +15,7 @@
 var express =   require("express");
 var multer  =   require('multer');
 var app     =   express();
-var sharp   =   require("sharp");
+var request =   require("request");
 var fs      =   require('fs');
 
 var port = process.env.port || 8080;
@@ -36,21 +36,25 @@ app.get('/',function(req,res){
 });
 
 app.post('/api/photo',function(req,res){
-  upload(req,res,function(err) {
-    if(err) {
-      return res.end("Error uploading file.");
-    }
-    sharp(__dirname + "/" + req.file.path).rotate(180).toFile(__dirname + "/rotated-" + req.file.filename, (err, info) => {
-      fs.unlink(__dirname + "/" + req.file.path);
-      if(err) {
-        return res.end("Error rotating file. " + err);
-      }
-      setTimeout(()=>{fs.unlink(__dirname + "/rotated-" + req.file.filename);},1000);
-      res.sendFile(__dirname + "/rotated-" + req.file.filename);
+    upload(req,res,function(err) {
+        if(err) {
+            return res.end("Error uploading file.");
+        }
+        const formData = {
+            userPhoto: fs.createReadStream(__dirname + "/" + req.file.path)
+        }
+        request.post({url:'http://annotate', formData: formData}, (err, httpResponse, body) => {
+            if (err) {
+                console.error('upload failed:', err);
+                res.sendStatus(500)
+                res.end("Error:", err)
+                return
+            }
+            res.end(JSON.stringify(body))
+        });
     });
-  });
 });
 
 app.listen(port, _ => {
-  console.log(`Working on port ${port}`);
+    console.log(`Working on port ${port}`);
 });

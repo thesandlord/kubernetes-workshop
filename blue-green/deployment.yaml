@@ -14,19 +14,19 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: hello-node
+  name: hello-node-blue
   labels:
-    name: hello-node
+    name: hello-node-blue
 spec:
   replicas: 5
   template:
     metadata:
       labels:
-        name: hello-node
+        name: hello-node-blue
     spec:
       containers:
       - name: hello-node
-        image: gcr.io/<PROJECT_ID>/imageflipper:1.0
+        image: gcr.io/<PROJECT_ID>/imageflipper:2.0
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

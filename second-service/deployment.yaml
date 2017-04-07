@@ -14,19 +14,19 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: hello-node
+  name: annotate
   labels:
-    name: hello-node
+    name: annotate
 spec:
-  replicas: 5
+  replicas: 1
   template:
     metadata:
       labels:
-        name: hello-node
+        name: annotate
     spec:
       containers:
-      - name: hello-node
-        image: gcr.io/<PROJECT_ID>/imageflipper:1.0
+      - name: annotate
+        image: gcr.io/<PROJECT_ID>/annotate:1.0
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

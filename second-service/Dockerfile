@@ -11,22 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: hello-node
-  labels:
-    name: hello-node
-spec:
-  replicas: 5
-  template:
-    metadata:
-      labels:
-        name: hello-node
-    spec:
-      containers:
-      - name: hello-node
-        image: gcr.io/<PROJECT_ID>/imageflipper:1.0
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 8080
+FROM node:onbuild
+EXPOSE 8080
+CMD ["npm", "start"]

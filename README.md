@@ -41,9 +41,9 @@ You can see the extrnal IP address for the service with this command. It might t
 
 ## Step 2: Scale up deployment
 
-One pod is not enough. Let's get 10 of them!
+One pod is not enough. Let's get 5 of them!
 
-`kubectl scale deployment hello-node --replicas=10`
+`kubectl scale deployment hello-node --replicas=5`
 
 You can see the all pods with this command:
 
@@ -82,3 +82,14 @@ You can watch the containers being updated with this command:
 Once it is done, press `ctrl + c` to quit.
 
 If you visit the website now, you can see the updated website!
+
+## Step 4: Backend Service
+
+The web frontend is created, but let's add some machine learning powers to the app. We will create another service that will use the [Google Cloud Vision](https://cloud.google.com/vision) to annotate the image before we flip it. The service will expose a REST API that the frontend service will communicate with.
+
+You can see the source code for the service [here](./second-service/index.js).
+
+You may notice we are using the [@google-cloud/vision]() npm module to call the Cloud Vision API. The @google-cloud namespace contains many libraries that make calling Google Cloud services from Node.js much easier.
+
+The service.yaml file for the backend service is very similar to the frontend service, but it does not specify `type: LoadBalancer`. This will prevent Kubernetes from spinning up a Cloud Load Balancer, and instead the service will only be accessable from inside the cluster.
+
