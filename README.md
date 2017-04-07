@@ -21,7 +21,7 @@ You can also use [Google Cloud Shell](https://cloud.google.com/shell), a free VM
 
 1. Create a cluster:
 
-`gcloud container clusters create my-cluster --zone=europe-west1-a`
+`gcloud container clusters create my-cluster --zone=europe-west1-b`
 
 If you get an error, make sure you enable the Container Engine API [here](https://console.cloud.google.com/apis/api/container.googleapis.com/overview).
 
@@ -43,7 +43,7 @@ You can see the extrnal IP address for the service with this command. It might t
 
 One pod is not enough. Let's get 5 of them!
 
-`kubectl scale deployment hello-node --replicas=5`
+`kubectl scale deployment hello-node-green --replicas=5`
 
 You can see the all pods with this command:
 

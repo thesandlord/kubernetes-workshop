@@ -14,15 +14,15 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: hello-node
+  name: hello-node-green
   labels:
-    name: hello-node
+    name: hello-node-green
 spec:
   replicas: 5
   template:
     metadata:
       labels:
-        name: hello-node
+        name: hello-node-green
     spec:
       containers:
       - name: hello-node
