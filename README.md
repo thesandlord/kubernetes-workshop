@@ -91,6 +91,10 @@ You can see the source code for the service [here](./second-service/index.js).
 
 You may notice we are using the [@google-cloud/vision]() npm module to call the Cloud Vision API. The @google-cloud namespace contains many libraries that make calling Google Cloud services from Node.js much easier.
 
+Build the Docker Container using [Google Container Builder](https://cloud.google.com/container-builder):
+
+`gcloud container builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/annotate:1.0 ./second-service/`
+
 The service.yaml file for the backend service is very similar to the frontend service, but it does not specify `type: LoadBalancer`. This will prevent Kubernetes from spinning up a Cloud Load Balancer, and instead the service will only be accessable from inside the cluster.
 
 Run the backend [deployment](./second-service/deployment.yaml):
