@@ -12,7 +12,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 **/
-var fs = require('fs');
 var path = require('path');
 
 var express = require('express');
