@@ -16,13 +16,13 @@ var path = require('path');
 
 var express = require('express');
 var multer = require('multer');
-var sharp = require('sharp');
+// var sharp = require('sharp');
 
 var app = express();
 var port = process.env.port || 8080;
 
 var storage = multer.memoryStorage();
-var upload = multer({ storage : storage}).single('userPhoto');
+var upload = multer({ storage : storage}).single('file');
 
 // From http://expressjs.com/en/guide/error-handling.html
 function errorHandler (err, req, res, next) {
@@ -35,8 +35,8 @@ function flipImage(req, res, next) {
   .rotate(180)
   .toBuffer()
   .then((data) => {
-    res.contentType('jpeg');
-    res.send(data, next);
+    res.send(data);
+    next();
   }).catch((err) => {
     errorHandler(err, req, res, next);
   });

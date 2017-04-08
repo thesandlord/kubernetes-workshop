@@ -31,12 +31,23 @@ function errorHandler (err, req, res, next) {
 }
 
 function sendPhoto(req, res, next) {
-  const formData = { userPhoto: req.file.buffer };
-  request.post({ url:'http://localhost:12345', formData: formData },
-    (err, httpResponse, body) => {
-      if (err) return errorHandler(err, req, res, next);
-      res.send(JSON.stringify(body));
-      next();
+  request.post({
+    url: 'http://annotate',
+    encoding: null,
+    formData: {
+      file: {
+        value: req.file.buffer,
+        options: {
+          filename: req.file.originalname,
+          contentType: 'image/jpg'
+        }
+      }
+    }
+  }, (err, httpResponse, body) => {
+    if (err) return errorHandler(err, req, res, next);
+    res.contentType('jpeg')
+    res.send(body);
+    next();
   });
 }
 
@@ -46,7 +57,7 @@ app.get('/', (req, res, next) => {
 
 app.post('/api/photo', (req, res, next) => {
   upload(req, res, function(err) {
-    if(err || !req.file) return errorHandler(err, req, res, next);
+    if (err || !req.file) return errorHandler(err, req, res, next);
     sendPhoto(req, res, next);
   });
 });
