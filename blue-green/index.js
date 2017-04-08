@@ -26,18 +26,17 @@ var upload = multer({ storage : storage}).single('userPhoto');
 
 // From http://expressjs.com/en/guide/error-handling.html
 function errorHandler (err, req, res, next) {
-  res.status(500);
-  res.render('error', { error: err }, next);
+  res.status(500).send(JSON.stringify({ error: err }));
+  next();
 }
 
 function sendPhoto(req, res, next) {
   const formData = { userPhoto: req.file.buffer };
-  request.post({
-    url:'http://annotate',
-    formData: formData
-  }, (err, httpResponse, body) => {
+  request.post({ url:'http://localhost:12345', formData: formData },
+    (err, httpResponse, body) => {
       if (err) return errorHandler(err, req, res, next);
-      res.send(JSON.stringify(body), next);
+      res.send(JSON.stringify(body));
+      next();
   });
 }
 

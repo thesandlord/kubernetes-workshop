@@ -26,8 +26,8 @@ var upload = multer({ storage : storage}).single('userPhoto');
 
 // From http://expressjs.com/en/guide/error-handling.html
 function errorHandler (err, req, res, next) {
-  res.status(500);
-  res.render('error', { error: err }, next);
+  res.status(500).send(JSON.stringify({ error: err }));
+  next();
 }
 
 function flipImage(req, res, next) {
@@ -52,4 +52,3 @@ app.post('/', (req, res, next) => {
 app.listen(port, _ => {
     console.log(`Working on port ${port}`)
 });
-
