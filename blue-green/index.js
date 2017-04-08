@@ -12,49 +12,45 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 **/
-var express =   require("express");
-var multer  =   require('multer');
-var app     =   express();
-var request =   require("request");
-var fs      =   require('fs');
+var path = require('path');
 
+var express = require('express');
+var multer = require('multer');
+
+var app = express();
 var port = process.env.port || 8080;
 
-var storage =   multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, './');
-  },
-  filename: function (req, file, callback) {
-    callback(null, Date.now() + '-' + file.originalname);
-  }
-});
-
+var storage = multer.memoryStorage();
 var upload = multer({ storage : storage}).single('userPhoto');
 
-app.get('/',function(req,res){
-      res.sendFile(__dirname + "/index.html");
+// From http://expressjs.com/en/guide/error-handling.html
+function errorHandler (err, req, res, next) {
+  res.status(500);
+  res.render('error', { error: err }, next);
+}
+
+function sendPhoto(req, res, next) {
+  const formData = { userPhoto: req.file.buffer };
+  request.post({
+    url:'http://annotate',
+    formData: formData
+  }, (err, httpResponse, body) => {
+      if (err) return errorHandler(err, req, res, next);
+      res.send(JSON.stringify(body), next);
+  });
+}
+
+app.get('/', (req, res, next) => {
+  res.sendFile(path.join(__dirname, 'index.html'), next);
 });
 
-app.post('/api/photo',function(req,res){
-    upload(req,res,function(err) {
-        if(err) {
-            return res.end("Error uploading file.");
-        }
-        const formData = {
-            userPhoto: fs.createReadStream(__dirname + "/" + req.file.path)
-        }
-        request.post({url:'http://annotate', formData: formData}, (err, httpResponse, body) => {
-            if (err) {
-                console.error('upload failed:', err);
-                res.sendStatus(500)
-                res.end("Error:", err)
-                return
-            }
-            res.end(JSON.stringify(body))
-        });
-    });
+app.post('/api/photo', (req, res, next) => {
+  upload(req, res, function(err) {
+    if(err || !req.file) return errorHandler(err, req, res, next);
+    sendPhoto(req, res, next);
+  });
 });
 
 app.listen(port, _ => {
-    console.log(`Working on port ${port}`);
+  console.log(`Working on port ${port}`);
 });

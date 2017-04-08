@@ -12,38 +12,41 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 **/
+var path = require('path');
 
-'use strict'
+var express = require('express');
+var multer = require('multer');
+var sharp = require('sharp');
 
-const express = require('express')
-const app = express()
-const vision = require('@google-cloud/vision')()
-const fs = require('fs')
-const multer = require('multer')
+var app = express();
+var port = process.env.port || 8080;
 
-const storage =   multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, './')
-  },
-  filename: function (req, file, callback) {
-    callback(null, Date.now() + '-' + file.originalname);
-  }
-})
+var storage = multer.memoryStorage();
+var upload = multer({ storage : storage}).single('userPhoto');
 
-const port = process.env.port || 8080
+// From http://expressjs.com/en/guide/error-handling.html
+function errorHandler (err, req, res, next) {
+  res.status(500);
+  res.render('error', { error: err }, next);
+}
 
-const upload = multer({ storage : storage}).single('userPhoto')
+function flipImage(req, res, next) {
+  sharp(req.file.buffer)
+  .rotate(180)
+  .toBuffer()
+  .then((data) => {
+    res.contentType('jpeg');
+    res.send(data, next);
+  }).catch((err) => {
+    errorHandler(err, req, res, next);
+  });
+}
 
-app.post('/', (req, res) => {
-  upload(req,res, (err) => {
-    if(err) {
-      return res.end("Error uploading file.", err)
-    }
-    vision.detect(__dirname + "/" + req.file.path, ['labels'], (err, detections, apiResponse) => {
-      fs.unlink(__dirname + "/" + req.file.path)
-      res.end(JSON.stringify(detections))
-    })
-  })
+app.post('/', (req, res, next) => {
+  upload(req, res, (err) => {
+    if(err || !req.file) return errorHandler(err, req, res, next);
+    flipImage(req, res, next);
+  });
 })
 
 app.listen(port, _ => {
