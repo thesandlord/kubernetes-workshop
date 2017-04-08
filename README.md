@@ -85,11 +85,9 @@ If you visit the website now, you can see the updated website!
 
 ## Step 4: Backend Service
 
-The web frontend is created, but let's add some machine learning powers to the app. We will create another service that will use the [Google Cloud Vision](https://cloud.google.com/vision) to annotate the image before we flip it. The service will expose a REST API that the frontend service will communicate with.
+The web frontend is created, but let's split the monolith into microservices. The backend service will do the image manipulation and will expose a REST API that the frontend service will communicate with.
 
 You can see the source code for the service [here](./second-service/index.js).
-
-You may notice we are using the [@google-cloud/vision]() npm module to call the Cloud Vision API. The @google-cloud namespace contains many libraries that make calling Google Cloud services from Node.js much easier.
 
 Build the Docker Container using [Google Container Builder](https://cloud.google.com/container-builder):
 
