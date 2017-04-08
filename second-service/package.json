@@ -8,9 +8,9 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "@google-cloud/vision": "^0.11.0",
     "multer": "1.1.0",
-    "express": "4.13.3"
+    "express": "4.13.3",
+    "sharp": "^0.17.3"
   },
   "keywords": [],
   "author": "Google Inc",
