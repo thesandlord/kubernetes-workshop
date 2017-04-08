@@ -12,44 +12,50 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 **/
-var express =   require("express");
-var multer  =   require('multer');
-var app     =   express();
-var sharp   =   require("sharp");
-var fs      =   require('fs');
+var fs = require('fs');
+var path = require('path');
 
+var express = require('express');
+var multer = require('multer');
+var sharp = require('sharp');
+
+var app = express();
 var port = process.env.port || 8080;
 
-var storage =   multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, './');
-  },
-  filename: function (req, file, callback) {
-    callback(null, Date.now() + '-' + file.originalname);
-  }
-});
-
+var storage = multer.memoryStorage();
 var upload = multer({ storage : storage}).single('userPhoto');
 
-app.get('/',function(req,res){
-      res.sendFile(__dirname + "/index.html");
+// From http://expressjs.com/en/guide/error-handling.html
+function errorHandler (err, req, res, next) {
+  res.status(500);
+  res.render('error', { error: err });
+  next();
+}
+
+function flipImage(req, res, next) {
+  sharp(req.file.buffer)
+  .rotate(180)
+  .toBuffer()
+  .then((data) => {
+    res.contentType('jpeg')
+    res.send(data);
+    next();
+  }).catch((err) => {
+    errorHandler(err, req, res, next);
+  });
+}
+
+app.get('/', (req,res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.post('/api/photo',function(req,res){
-  upload(req,res,function(err) {
-    if(err) {
-      return res.end("Error uploading file.");
-    }
-    sharp(__dirname + "/" + req.file.path).rotate(180).toFile(__dirname + "/rotated-" + req.file.filename, (err, info) => {
-      fs.unlink(__dirname + "/" + req.file.path);
-      if(err) {
-        return res.end("Error rotating file. " + err);
-      }
-      setTimeout(()=>{fs.unlink(__dirname + "/rotated-" + req.file.filename);},1000);
-      res.sendFile(__dirname + "/rotated-" + req.file.filename);
-    });
+app.post('/api/photo', (req, res, next) => {
+  upload(req, res, (err) => {
+    if(err || !req.file) return errorHandler(err, req, res, next);
+    flipImage(req, res, next);
   });
 });
+
 
 app.listen(port, _ => {
   console.log(`Working on port ${port}`);
