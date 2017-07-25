@@ -21,6 +21,11 @@ You can also use [Google Cloud Shell](https://cloud.google.com/shell), a free VM
 
 1. Create a cluster:
 
+```
+ZONE=$(curl "http://metadata.google.internal/computeMetadata/v1/instance/zone" \ 
+      -H "Metadata-Flavor: Google" | sed 's:.*/::')
+```
+
 `gcloud container clusters create my-cluster --zone=europe-west1-b`
 
 If you get an error, make sure you enable the Container Engine API [here](https://console.cloud.google.com/apis/api/container.googleapis.com/overview).
