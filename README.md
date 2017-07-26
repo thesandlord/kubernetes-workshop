@@ -26,7 +26,7 @@ ZONE=$(curl "http://metadata.google.internal/computeMetadata/v1/instance/zone" \
       -H "Metadata-Flavor: Google" | sed 's:.*/::')
 ```
 
-`gcloud container clusters create my-cluster --zone=europe-west1-b`
+`gcloud container clusters create my-cluster --zone=$ZONE`
 
 If you get an error, make sure you enable the Container Engine API [here](https://console.cloud.google.com/apis/api/container.googleapis.com/overview).
 
