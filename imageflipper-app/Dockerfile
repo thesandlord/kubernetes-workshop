@@ -11,22 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: annotate
-  labels:
-    name: annotate
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        name: annotate
-    spec:
-      containers:
-      - name: annotate
-        image: gcr.io/<PROJECT_ID>/annotate:1.0
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 8080
+FROM node:9.0.0
+
+WORKDIR /var/nodeapps/
+
+ADD *.js .
+ADD *.html .
+ADD *.json . 
+ADD LICENSE .
+
+RUN npm install --production
+ARG version
+RUN echo $version > version.txt
+
+EXPOSE 8080
+
+CMD ["npm", "start"]
