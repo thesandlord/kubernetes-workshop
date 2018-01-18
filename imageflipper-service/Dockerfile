@@ -11,8 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM node:6
-copy . .
-run npm install --production
+FROM node:9.0.0
+
+WORKDIR /var/nodeapps/
+
+ADD *.js .
+ADD *.json . 
+ADD LICENSE .
+
+RUN npm install --production
+ARG version
+RUN echo $version > version.txt
+
 EXPOSE 8080
+
 CMD ["npm", "start"]

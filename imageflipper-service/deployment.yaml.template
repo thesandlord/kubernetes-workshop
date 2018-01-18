@@ -11,8 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM node:6
-copy . .
-run npm install --production
-EXPOSE 8080
-CMD ["npm", "start"]
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: flipper-service
+  labels:
+    name: flipper-service
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: flipper-service
+    spec:
+      containers:
+      - name: flipper-service
+        image: gcr.io/<PROJECT_ID>/imageflipper-service:<VERSION>
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080

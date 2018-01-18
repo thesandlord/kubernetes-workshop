@@ -11,8 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM node:6
-copy . .
-run npm install --production
-EXPOSE 8080
-CMD ["npm", "start"]
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hello-node-green
+  labels:
+    name: hello-node-green
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        name: hello-node-green
+    spec:
+      containers:
+      - name: hello-node
+        image: gcr.io/<PROJECT_ID>/imageflipper-app:<VERSION>
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
