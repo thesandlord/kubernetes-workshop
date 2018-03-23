@@ -16,7 +16,7 @@ var path = require('path');
 
 var express = require('express');
 var multer = require('multer');
-var sharp = require('sharp');
+// var sharp = require('sharp');
 
 var app = express();
 var port = process.env.port || 8080;
