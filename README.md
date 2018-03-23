@@ -4,14 +4,18 @@ This workshop will walk you through deploying a Node.js microservices stack with
 
 ## Optional: Set up local environment
 
-This tutorial launches a Kubernetes cluster on [Google Container Engine](https://cloud.google.com/container)
+This tutorial launches a Kubernetes cluster on [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/)
 
 If you are running this tutorial at home, you will need a Google Cloud Platform account. If you don't have one, sign up for the [free trial](https://cloud.google.com/free).
 
-To complete this tutorial, you will need to following tools installed:
+To complete this tutorial, you will need the following tools installed:
 
  - [Kubernetes CLI](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG.md#client-binaries)
  - [gcloud SDK](https://cloud.google.com/sdk)
+
+ We will also use a set of Google Cloud APIs that you can [enable here](https://console.cloud.google.com/flows/enableapi?apiid=container.googleapis.com,cloudbuild.googleapis.com) all together.
+ - [Kubernetes Engine API](https://console.cloud.google.com/apis/api/container.googleapis.com/overview)
+ - [Container Builder API](https://console.cloud.google.com/apis/api/cloudbuild.googleapis.com/overview)
 
 You can also use [Google Cloud Shell](https://cloud.google.com/shell), a free VM that has all these tools pre-installed.
 
@@ -28,7 +32,7 @@ ZONE=$(curl "http://metadata.google.internal/computeMetadata/v1/instance/zone" \
 
 `gcloud container clusters create my-cluster --zone=$ZONE`
 
-If you get an error, make sure you enable the Container Engine API [here](https://console.cloud.google.com/apis/api/container.googleapis.com/overview).
+If you get an error, make sure you enable the Kubernetes Engine API [here](https://console.cloud.google.com/apis/api/container.googleapis.com/overview).
 
 2. Run the hello world [deployment](./hello-node/deployment.yaml):
 
@@ -60,9 +64,9 @@ The new app will take a picture, flip it around, and return it.
 
 You can see the source code [here](./rolling-update/index.js).
 
-The Dockerfile for this container can be found here.
+The Dockerfile for this container can be [found here](./rolling-update/Dockerfile).
 
-Build the Docker Container using [Google Container Builder](https://cloud.google.com/container-builder):
+Build the Docker Container using [Google Container Builder](https://console.cloud.google.com/gcr):
 
 `gcloud container builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/imageflipper:1.0 ./rolling-update/`
 
